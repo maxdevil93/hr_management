@@ -15,4 +15,6 @@ PR 생성 → 팀원이 리뷰 → Approve/Request changes
     <br>
     ↓
     <br>
-PR Merge → dev/main 브랜치 반영
+PR Merge → dev에 반영 
+<br>
+- main은 내부 테스트완료 후 merge 및 브랜치 반영
