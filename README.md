@@ -3,7 +3,7 @@ ERP 프로젝트 입니다.
 
 
 
-🔹 2. PR(풀 리퀘스트) 사용
+🔹  PR(풀 리퀘스트) 사용
 
 feature 브랜치 → dev/main PR 생성
 
