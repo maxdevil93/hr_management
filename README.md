@@ -1,5 +1,5 @@
 # hr_management
-ERP 프로젝트 입니다. 
+인사시스템 플랫폼 (ERP)
 
 🔹규칙
 <br>
