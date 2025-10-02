@@ -1,10 +1,22 @@
-HELP.md
+# ========================
+# Maven / Gradle
+# ========================
 target/
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+build/
 
-### STS ###
+# ========================
+# IntelliJ IDEA
+# ========================
+.idea/
+*.iws
+*.iml
+*.ipr
+/out/
+
+# ========================
+# Eclipse / STS
+# ========================
 .apt_generated
 .classpath
 .factorypath
@@ -13,21 +25,23 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
+# ========================
+# NetBeans
+# ========================
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# ========================
+# VS Code
+# ========================
 .vscode/
+
+# ========================
+# 기타
+# ========================
+*.log
+*.tmp
+.DS_Store
