@@ -453,7 +453,7 @@ export function CompanyNotices() {
                   </Badge>
                 </div>
                 <DialogDescription>
-                  {selectedNotice.description || "공지사항 상세 내용을 확인하세요."}
+                  공지사항 상세 내용을 확인하세요.
                 </DialogDescription>
               </DialogHeader>
               
