@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { ScrollArea } from "./ui/scroll-area";
-import { Separator } from "./ui/separator";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { ScrollArea } from "../ui/scroll-area";
+import { Separator } from "../ui/separator";
 import {
   MessageCircle,
   ChevronRight,
