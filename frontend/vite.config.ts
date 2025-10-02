@@ -2,6 +2,8 @@
   import { defineConfig } from 'vite';
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
+  import tailwindcss from '@tailwindcss/postcss';
+import autoprefixer from 'autoprefixer';
 
   export default defineConfig({
     plugins: [react()],
@@ -47,6 +49,11 @@
         '@radix-ui/react-alert-dialog@1.1.6': '@radix-ui/react-alert-dialog',
         '@radix-ui/react-accordion@1.2.3': '@radix-ui/react-accordion',
         '@': path.resolve(__dirname, './src'),
+      },
+    },
+    css: {
+      postcss: {
+        plugins: [tailwindcss(), autoprefixer],
       },
     },
     build: {

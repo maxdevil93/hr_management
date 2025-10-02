@@ -4,6 +4,7 @@ import { SidebarTrigger } from "../ui/sidebar";
 import { Bell, LogIn, MessageCircle, Star, StarOff, X } from "lucide-react";
 import { menuItems } from "../../constants/menuItems";
 import { MenuItem } from "../../types";
+import { MouseEvent } from "react";
 
 interface HeaderProps {
   isLoggedIn: boolean;
@@ -75,7 +76,7 @@ export function Header({
                     variant="ghost"
                     size="sm"
                     className="h-3 w-3 p-0 hover:bg-destructive/20 ml-1"
-                    onClick={(e) => {
+                    onClick={(e: MouseEvent) => {
                       e.stopPropagation();
                       onFavoriteRemove(item.key);
                     }}
