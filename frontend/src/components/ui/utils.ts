@@ -1,2 +1,2 @@
-// Re-export from lib/utils.ts for backward compatibility
+// Re-export from lib/utils.ts for backward compatibilityd
 export { cn } from "../../lib/utils";
