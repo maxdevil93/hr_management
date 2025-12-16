@@ -203,3 +203,6 @@ pnpm-lock.yaml
 
 # Misc
 .DS_Store
+
+# Backup directories
+backup/
