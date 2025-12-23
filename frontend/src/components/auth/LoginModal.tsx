@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Lock, User, Eye, EyeOff } from "lucide-react";
+import { SignupModal } from "./SignupModal.tsx";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +36,14 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
     }, 1000);
   };
 
+  const handleSignupSuccess = (signupEmail: string) => {
+    setUsername(signupEmail);
+    setPassword("");
+    setIsSignupOpen(false);
+  };
+
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
@@ -114,11 +123,26 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
                 <p className="text-sm text-muted-foreground">
                   테스트 계정: admin / password
                 </p>
+                <Button
+                  type="button"
+                  variant="link"
+                  className="mt-2"
+                  onClick={() => setIsSignupOpen(true)}
+                >
+                  아직 계정이 없으신가요? 회원가입
+                </Button>
               </div>
             </form>
           </CardContent>
         </Card>
       </DialogContent>
     </Dialog>
+
+    <SignupModal
+      isOpen={isSignupOpen}
+      onClose={() => setIsSignupOpen(false)}
+      onSuccess={handleSignupSuccess}
+    />
+    </>
   );
 }

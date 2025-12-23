@@ -1,0 +1,45 @@
+.signup-modal-content {
+  width: 100vw;
+  max-width: 500px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.signup-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.signup-row.signup-row-top {
+  align-items: flex-start;
+}
+
+.signup-row.signup-row-top .text-right {
+  padding-top: 6px;
+}
+
+.signup-name-input {
+  max-width: 180px;
+  width: 100%;
+}
+
+.signup-input {
+  max-width: 220px;
+  width: 100%;
+}
+
+.signup-select {
+  max-width: 220px;
+  width: 100%;
+}
+
+.signup-addr-input {
+  width: 100%;
+}
+
