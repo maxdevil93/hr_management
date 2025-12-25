@@ -1,12 +1,10 @@
 spring:
   datasource:
-    # 1. 주소는 mysql 그대로 써도 됩니다.
-    url: jdbc:mysql://database-1.c3kkyuuewjvl.ap-northeast-2.rds.amazonaws.com:3306/innodb?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://database-1.c3kkyuuewjvl.ap-northeast-2.rds.amazonaws.com:3306/innodb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: admin
     password: jiwangangilproject
 
-    # 2. ★이게 핵심입니다★
-    # org.mysql.jdbc.Driver가 아니라 아래 이름으로 바꾸세요.
+
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -16,7 +14,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        # 3. 방언(Dialect)도 MySQL용으로 맞춰주세요.
         dialect: org.hibernate.dialect.MySQLDialect
 
 server:

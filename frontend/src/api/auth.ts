@@ -17,7 +17,7 @@ export interface SignupPayload {
 }
 
 export async function signupUser(payload: SignupPayload) {
-  const res = await fetch(`${API_BASE}/users`, {
+  const res = await fetch(`${API_BASE}/employees/signUp`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
