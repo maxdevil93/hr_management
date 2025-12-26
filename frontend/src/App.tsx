@@ -10,6 +10,8 @@ import { Schedule } from "./components/schedule/Schedule";
 import { ApprovalManagement } from "./components/approval/ApprovalManagement";
 import { useFavorites } from "./hooks/useFavorites";
 import { useChat } from "./hooks/useChat";
+import { AlertProvider } from "./components/modal/Modal";
+import { Alert } from "./components/ui/alert";
 
 export default function App() {
   const [activeMenu, setActiveMenu] = useState("dashboard");
@@ -72,26 +74,28 @@ export default function App() {
   };
 
   return (
-    <Layout
-      activeMenu={activeMenu}
-      onMenuSelect={setActiveMenu}
-      isLoggedIn={isLoggedIn}
-      favorites={favorites}
-      isChatCollapsed={isChatCollapsed}
-      selectedChatRoom={selectedChatRoom}
-      isChatPopupOpen={isChatPopupOpen}
-      isLoginModalOpen={isLoginModalOpen}
-      onLoginClick={() => setIsLoginModalOpen(true)}
-      onLogout={handleLogout}
-      onFavoriteToggle={toggleFavorite}
-      onFavoriteRemove={removeFavorite}
-      onChatToggle={toggleChatPanel}
-      onChatRoomClick={handleChatRoomClick}
-      onCloseChatPopup={handleCloseChatPopup}
-      onLogin={handleLogin}
-      onCloseLoginModal={() => setIsLoginModalOpen(false)}
-    >
-      {renderContent()}
-    </Layout>
+    <AlertProvider>
+      <Layout
+        activeMenu={activeMenu}
+        onMenuSelect={setActiveMenu}
+        isLoggedIn={isLoggedIn}
+        favorites={favorites}
+        isChatCollapsed={isChatCollapsed}
+        selectedChatRoom={selectedChatRoom}
+        isChatPopupOpen={isChatPopupOpen}
+        isLoginModalOpen={isLoginModalOpen}
+        onLoginClick={() => setIsLoginModalOpen(true)}
+        onLogout={handleLogout}
+        onFavoriteToggle={toggleFavorite}
+        onFavoriteRemove={removeFavorite}
+        onChatToggle={toggleChatPanel}
+        onChatRoomClick={handleChatRoomClick}
+        onCloseChatPopup={handleCloseChatPopup}
+        onLogin={handleLogin}
+        onCloseLoginModal={() => setIsLoginModalOpen(false)}
+      >
+        {renderContent()}
+      </Layout>
+    </AlertProvider>
   );
 }

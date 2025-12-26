@@ -20,8 +20,37 @@ import {
 } from "lucide-react";
 import { salesData, inventoryData, recentOrders } from "../../constants/mockData";
 import { getStatusColor } from "../../utils/statusHelpers";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAlert } from "../modal/Modal";
 
 export function Dashboard() {
+  const {showAlert} = useAlert();
+
+  const handleDelete = () => {
+    showAlert({
+      title: '삭제 확인',
+      message: '정말로 이 항목을 삭제하시겠습니까?',
+      confirmText: '삭제하기',
+      cancelText: '유지하기',
+      onConfirm: () => console.log('삭제됨'),
+      onCancel: () => console.log('취소됨'),
+    });
+  };
+
+  const handleWelcome = () => {
+    showAlert({
+      title: '환영합니다',
+      message: '성공적으로 로그인되었습니다.',
+      confirmText: '확인',
+      onConfirm: () => console.log('홈 이동'),
+    });
+  };
+
+  useEffect(() => {
+    axios.get("/api/test/1").then(res => console.log(res.data))
+  }, [])
+
   return (
     <div className="space-y-6">
       <div>
@@ -37,7 +66,7 @@ export function Dashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₩34,580,000</div>
+            <div className="text-2xl font-bold" onClick={handleWelcome}>₩34,580,000</div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+12.5%</span> 전월 대비
             </p>
