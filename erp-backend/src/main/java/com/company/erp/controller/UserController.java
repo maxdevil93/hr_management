@@ -4,6 +4,7 @@ import com.company.erp.domain.User;
 import com.company.erp.dto.LoginRequest;
 import com.company.erp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(
-            @RequestBody LoginRequest request,
-            HttpServletResponse httpResponse) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request) {
         try {
             // Service에서 User와 Token을 함께 받음
             Map<String, Object> loginResult = service.login(request.getId(), request.getPw());
@@ -51,14 +50,13 @@ public class UserController {
                 User user = (User) loginResult.get("user");
                 String token = (String) loginResult.get("token");
 
-                // httpOnly Cookie로 토큰 설정
-                // ✅ ResponseCookie 사용 (SameSite 자동 포함)
+                // ✅ ResponseCookie 생성
                 ResponseCookie cookie = ResponseCookie.from("auth_token", token)
                         .httpOnly(true)
                         .secure(false) // 개발: false, 프로덕션: true
                         .path("/")
                         .maxAge(86400) // 24시간
-                        .sameSite("Strict") // CSRF 방지
+                        .sameSite("Strict") // ✅ CSRF 방지
                         .build();
 
                 response.put("success", true);
@@ -70,14 +68,17 @@ public class UserController {
                 userInfo.put("email", user.getEmail());
                 userInfo.put("position", user.getPosition());
                 userInfo.put("job", user.getJob());
-                // 필요한 필드 더 추가 해야됨
+                // 필요한 필드 더 추가 가능
                 // userInfo.put("tel", user.getTel());
                 // userInfo.put("birth", user.getBirth());
                 // userInfo.put("gender", user.getGender());
 
-                // 응답에서 token 제거 (보안 - Cookie에만 저장)
                 response.put("user", userInfo);
-                return ResponseEntity.ok(response);
+
+                // ✅ Cookie를 ResponseEntity 헤더에 추가
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                        .body(response);
             } else {
                 response.put("success", false);
                 response.put("message", "ID 또는 비밀번호가 올바르지 않습니다.");
