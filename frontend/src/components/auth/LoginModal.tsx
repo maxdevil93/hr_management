@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Lock, User, Eye, EyeOff } from "lucide-react";
 import { SignupModal } from "./SignupModal.tsx";
+import { loginUser } from "../../api/auth";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -19,21 +20,36 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !password) return;
 
     setIsLoading(true);
+    setLoginError(null);
     
-    // 모의 로그인 처리
-    setTimeout(() => {
-      onLogin(username, password);
+    try {
+      const response = await loginUser({
+        id: username,
+        pw: password,
+      });
+
+      if (response.success) {
+        onLogin(username, password);
+        setIsLoading(false);
+        onClose();
+        setUsername("");
+        setPassword("");
+        setLoginError(null);
+      } else {
+        setLoginError(response.message || "로그인에 실패했습니다.");
+        setIsLoading(false);
+      }
+    } catch (error: any) {
+      setLoginError(error?.message || "로그인 중 오류가 발생했습니다.");
       setIsLoading(false);
-      onClose();
-      setUsername("");
-      setPassword("");
-    }, 1000);
+    }
   };
 
   const handleSignupSuccess = (signupEmail: string) => {
@@ -111,6 +127,10 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
                 </div>
               </div>
               
+              {loginError && (
+                <p className="text-sm text-destructive text-center">{loginError}</p>
+              )}
+
               <Button 
                 type="submit" 
                 className="w-full"
@@ -120,9 +140,6 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
               </Button>
               
               <div className="text-center pt-4">
-                <p className="text-sm text-muted-foreground">
-                  테스트 계정: admin / password
-                </p>
                 <Button
                   type="button"
                   variant="link"
