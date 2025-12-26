@@ -2,6 +2,8 @@ package com.company.erp.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -21,7 +23,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // String -> Long
+    private long user_id;
+
+    @Column(nullable = false, length = 20)
+    private String id;
 
     @Column(nullable = false, length = 200)
     private String pw;
@@ -63,9 +68,11 @@ public class User {
     @Column(length = 50) // 이름 넉넉하게
     private String empName;
 
+    @CreationTimestamp  // INSERT 시 자동으로 현재 시간 설정
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp  // UPDATE 시 자동으로 현재 시간 설정
     private LocalDateTime updatedAt;
 
     @Column(columnDefinition = "TINYINT(1)")

@@ -8,7 +8,8 @@ import lombok.Setter;
 import java.sql.Date;
 
 @Getter @Setter
-public class userSignupRequest {
+public class UserSignupRequest {
+    private String id;
     private String empName;
     private String email;
     private String pw;

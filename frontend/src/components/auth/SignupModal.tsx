@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { User } from "lucide-react";
 import "../../styles/signup-modal.css";
-import { signupUser } from "../../api/auth";
+import { signupUser, checkIdDuplicate } from "../../api/auth";
 
 declare global {
   interface Window {
@@ -22,6 +22,7 @@ interface SignupModalProps {
 
 export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
   const [signupForm, setSignupForm] = useState({
+    id: "",
     empName: "",
     email: "",
     pw: "",
@@ -39,6 +40,9 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
   const [addrError, setAddrError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isCheckingId, setIsCheckingId] = useState(false);
+  const [idCheckStatus, setIdCheckStatus] = useState<"none" | "checking" | "available" | "duplicate">("none");
+  const [idCheckError, setIdCheckError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!window.daum) {
@@ -70,10 +74,51 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
     signupForm.pw !== signupForm.pwConfirm
   );
 
+  const handleCheckIdDuplicate = async () => {
+    if (!signupForm.id || signupForm.id.trim() === "") {
+      setIdCheckError("ID를 입력해주세요.");
+      setIdCheckStatus("none");
+      return;
+    }
+
+    setIsCheckingId(true);
+    setIdCheckError(null);
+    setIdCheckStatus("checking");
+
+    try {
+      const isAvailable = await checkIdDuplicate(signupForm.id);
+      if (isAvailable) {
+        setIdCheckStatus("available");
+        setIdCheckError(null);
+      } else {
+        setIdCheckStatus("duplicate");
+        setIdCheckError(null);
+      }
+    } catch (error: any) {
+      setIdCheckStatus("none");
+      setIdCheckError(error?.message || "ID 중복 확인 중 오류가 발생했습니다.");
+    } finally {
+      setIsCheckingId(false);
+    }
+  };
+
+  const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSignupForm({ ...signupForm, id: e.target.value });
+    // ID가 변경되면 중복 확인 상태 초기화
+    if (idCheckStatus !== "none") {
+      setIdCheckStatus("none");
+      setIdCheckError(null);
+    }
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { empName, email, pw, pwConfirm } = signupForm;
-    if (!empName || !email || !pw || !pwConfirm || isPwMismatch) return;
+    const { id, empName, email, pw, pwConfirm } = signupForm;
+    if (!id || !empName || !email || !pw || !pwConfirm || isPwMismatch) return;
+    if (idCheckStatus !== "available") {
+      setSubmitError("ID 중복 확인을 완료해주세요.");
+      return;
+    }
 
     setIsSignupLoading(true);
     setSubmitError(null);
@@ -82,6 +127,7 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
       const fullAddress = [signupForm.addr, signupForm.addrDetail].filter(Boolean).join(" ").trim() || null;
 
       await signupUser({
+        id: signupForm.id,
         empName: signupForm.empName,
         email: signupForm.email,
         pw: signupForm.pw,
@@ -99,6 +145,7 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
 
       onSuccess(email);
       setSignupForm({
+        id: "",
         empName: "",
         email: "",
         pw: "",
@@ -113,6 +160,8 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
         startDate: "",
         workType: "",
       });
+      setIdCheckStatus("none");
+      setIdCheckError(null);
     } catch (error: any) {
       setSubmitError(error?.message || "회원가입 요청 중 오류가 발생했습니다.");
     } finally {
@@ -141,6 +190,43 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
 
           <CardContent>
             <form onSubmit={handleSignup} className="signup-form">
+              <div className="signup-row">
+                <Label htmlFor="signup-id" className="text-right">
+                  ID
+                </Label>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <Input
+                      id="signup-id"
+                      type="text"
+                      placeholder="사용할 ID를 입력하세요"
+                      value={signupForm.id}
+                      onChange={handleIdChange}
+                      className="signup-input"
+                      required
+                      disabled={isCheckingId}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={handleCheckIdDuplicate}
+                      disabled={isCheckingId || !signupForm.id || signupForm.id.trim() === ""}
+                    >
+                      {isCheckingId ? "확인 중..." : "중복 확인"}
+                    </Button>
+                  </div>
+                  {idCheckStatus === "available" && (
+                    <p className="text-sm text-green-600">사용 가능한 ID입니다.</p>
+                  )}
+                  {idCheckStatus === "duplicate" && (
+                    <p className="text-sm text-destructive">이미 사용 중인 ID입니다.</p>
+                  )}
+                  {idCheckError && idCheckStatus !== "duplicate" && (
+                    <p className="text-sm text-destructive">{idCheckError}</p>
+                  )}
+                </div>
+              </div>
+
               <div className="signup-row">
                 <Label htmlFor="signup-empName" className="text-right">
                   이름
@@ -341,11 +427,13 @@ export function SignupModal({ isOpen, onClose, onSuccess }: SignupModalProps) {
                 className="w-full"
                 disabled={
                   isSignupLoading ||
+                  !signupForm.id ||
                   !signupForm.empName ||
                   !signupForm.email ||
                   !signupForm.pw ||
                   !signupForm.pwConfirm ||
-                  isPwMismatch
+                  isPwMismatch ||
+                  idCheckStatus !== "available"
                 }
               >
                 {isSignupLoading ? "회원가입 중..." : "회원가입"}

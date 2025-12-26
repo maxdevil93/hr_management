@@ -1,13 +1,16 @@
 package com.company.erp.repository;
 
 import com.company.erp.domain.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    // 회원가입시 ID중복 조회
+    boolean existsById(String id);  // ✅ Spring이 자동으로 해석
 
-    // 이메일로 중복 가입 확인이나 로그인을 하기 위해 조회 기능
-//    Optional<User> findByEmail(String email);
-
-
+    // 로그인용: ID로 사용자 조회
+    Optional<User> findById(String id);
 }
