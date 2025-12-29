@@ -12,7 +12,7 @@ interface AlertOptions {
 }
 
 interface AlertContextType {
-  showAlert: () => void;
+  showAlert: (options : AlertOptions) => void;
   hideAlert: () => void;
 }
 

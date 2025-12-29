@@ -205,3 +205,6 @@ pnpm-lock.yaml
 
 # Backup directories
 backup/
+
+# VSCode
+.vscode

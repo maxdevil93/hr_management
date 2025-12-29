@@ -23,10 +23,13 @@ import { getStatusColor } from "../../utils/statusHelpers";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAlert } from "../modal/Modal";
+import { useLoading } from "../modal/LoadingContext";
 
 export function Dashboard() {
   const {showAlert} = useAlert();
+  const {showLoading, hideLoading} = useLoading();
 
+  // 예시 (알람창)
   const handleDelete = () => {
     showAlert({
       title: '삭제 확인',
@@ -38,6 +41,7 @@ export function Dashboard() {
     });
   };
 
+  // 예시 (알람창)
   const handleWelcome = () => {
     showAlert({
       title: '환영합니다',
@@ -45,6 +49,32 @@ export function Dashboard() {
       confirmText: '확인',
       onConfirm: () => console.log('홈 이동'),
     });
+  };
+
+  // 예시 (로딩창)
+  // const fetchData = async () => {
+  //   showLoading("데이터를 가져오는 중...");
+  //   try {
+  //     const response = await fetch('/api/data');
+  //     // 성공 로직...
+  //   } catch (error) {
+  //     showAlert({
+  //       title: "오류 발생",
+  //       message: "데이터를 불러오지 못했습니다.",
+  //       confirmText: "닫기"
+  //     });
+  //   } finally {
+  //     hideLoading();
+  //   }
+  // };
+
+  // 예시 (로딩창)
+  const showLoading_ = () => {
+    showLoading("로딩 테스트 ...");
+  };
+
+  const hideLoading_ = () => {
+    hideLoading();
   };
 
   useEffect(() => {
@@ -79,7 +109,7 @@ export function Dashboard() {
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold" onClick={showLoading_}>1,234</div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+8.2%</span> 전월 대비
             </p>
